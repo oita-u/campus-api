@@ -18,10 +18,17 @@ func New() *gin.Engine {
 	studentService := &service.StudentService{Repo: studentRepo}
 	studentHandler := &handler.StudentHandler{Service: studentService}
 
+	// --- New Status Change Setups ---
+	statusRepo := &repository.StudentStatusChangeRepository{}
+	statusService := &service.StudentStatusChangeService{Repo: statusRepo}
+	statusHandler := &handler.StudentStatusChangeHandler{Service: statusService}
+
 	v1 := r.Group("/v1")
-	v1.GET("/ping", handler.Ping)
 	v1.GET("/students/:id", studentHandler.GetByID)
 	v1.GET("/students", studentHandler.List)
+
+	// ステータス変更履歴用
+	v1.GET("/students/:id/status-changes", statusHandler.GetByStudentNumber)
 
 	// JWT保護ルート
 	auth := v1.Group("/auth")
