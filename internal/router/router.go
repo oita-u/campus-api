@@ -21,6 +21,7 @@ func New() *gin.Engine {
 	v1 := r.Group("/v1")
 	v1.GET("/ping", handler.Ping)
 	v1.GET("/students/:id", studentHandler.GetByID)
+	v1.GET("/students", studentHandler.List)
 
 	// JWT保護ルート
 	auth := v1.Group("/auth")
