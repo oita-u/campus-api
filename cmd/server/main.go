@@ -6,12 +6,14 @@ import (
 	"github.com/gin-gonic/gin"
 
 	"github.com/oita-u/campus-api/internal/config"
+	"github.com/oita-u/campus-api/internal/db"
 	"github.com/oita-u/campus-api/internal/logger"
 	"github.com/oita-u/campus-api/internal/router"
 )
 
 func main() {
 	config.Load()
+	db.Init()
 
 	logger.Init()
 	defer logger.Get().Sync()

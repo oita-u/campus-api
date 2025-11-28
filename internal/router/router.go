@@ -3,6 +3,8 @@ package router
 import (
 	"github.com/oita-u/campus-api/internal/handler"
 	"github.com/oita-u/campus-api/internal/middleware"
+	"github.com/oita-u/campus-api/internal/repository"
+	"github.com/oita-u/campus-api/internal/service"
 
 	"github.com/gin-gonic/gin"
 )
@@ -12,11 +14,16 @@ func New() *gin.Engine {
 
 	r.Use(gin.Recovery())
 
-	api := r.Group("/api")
-	api.GET("/ping", handler.Ping)
+	studentRepo := &repository.StudentRepository{}
+	studentService := &service.StudentService{Repo: studentRepo}
+	studentHandler := &handler.StudentHandler{Service: studentService}
+
+	v1 := r.Group("/v1")
+	v1.GET("/ping", handler.Ping)
+	v1.GET("/students/:id", studentHandler.GetByID)
 
 	// JWT保護ルート
-	auth := api.Group("/auth")
+	auth := v1.Group("/auth")
 	auth.Use(middleware.JWT())
 	{
 		auth.GET("/me", handler.Me)
