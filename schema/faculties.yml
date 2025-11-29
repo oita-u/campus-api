@@ -1,0 +1,25 @@
+table: faculties
+comment: 学部情報を管理するテーブル
+
+columns:
+  - name: id
+    type: int64
+    comment: 学部ID
+
+  - name: name
+    type: string
+    comment: 学部名
+
+  - name: code
+    type: string
+    comment: 学部コード
+  
+  - name: updated_at
+    type: time.Time
+    default: CURRENT_TIMESTAMP
+    comment: 更新日時
+
+  - name: created_at
+    type: time.Time
+    default: CURRENT_TIMESTAMP
+    comment: 作成日時

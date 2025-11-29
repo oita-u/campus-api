@@ -1,0 +1,24 @@
+table: programs
+comment: 学科内のコースやプログラムを管理するテーブル
+
+columns:
+  - name: id
+    type: int64
+    comment: プログラムID
+
+  - name: department_id
+    type: int64
+    comment: 所属学科ID
+
+  - name: name
+    type: string
+    comment: コース・プログラム名
+
+  - name: description
+    type: string
+    comment: コースの説明
+
+  - name: created_at
+    type: time.Time
+    default: CURRENT_TIMESTAMP
+    comment: 作成日時

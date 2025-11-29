@@ -1,0 +1,45 @@
+table: courses
+comment: 授業情報を管理するテーブル
+
+columns:
+  - name: id
+    type: int64
+    comment: 授業ID
+
+  - name: course_name
+    type: string
+    comment: 科目名
+
+  - name: instructor_name
+    type: string
+    comment: 担当教員名
+
+  - name: course_type
+    type: string
+    comment: 講義区分
+
+  - name: day_of_week
+    type: string
+    comment: 曜日 (Mon, Tue, Wed, Thu, Fri, Sat, Sun, None)
+
+  - name: period
+    type: int
+    comment: 時限 (1〜7)
+
+  - name: academic_year
+    type: int
+    comment: 開講年度
+
+  - name: semester
+    type: string
+    comment: 学期
+
+  - name: updated_at
+    type: time.Time
+    default: CURRENT_TIMESTAMP
+    comment: 更新日時
+
+  - name: created_at
+    type: time.Time
+    default: CURRENT_TIMESTAMP
+    comment: 作成日時
