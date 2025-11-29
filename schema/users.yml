@@ -1,0 +1,42 @@
+table: users
+comment: ユーザー情報を管理するテーブル
+
+columns:
+  - name: id
+    type: int64
+    comment: ID
+
+  - name: user_code
+    type: string
+    comment: ユーザーID
+
+  - name: role
+    type: string
+    default: "student"
+    comment: 役割
+
+  - name: name
+    type: string
+    comment: 氏名
+
+  - name: department
+    type: string
+    comment: 所属
+
+  - name: grade
+    type: string
+    comment: 学年
+
+  - name: title
+    type: string
+    comment: 役職
+
+  - name: updated_at
+    type: time.Time
+    default: CURRENT_TIMESTAMP
+    comment: 更新日時
+
+  - name: created_at
+    type: time.Time
+    default: CURRENT_TIMESTAMP
+    comment: 作成日時
