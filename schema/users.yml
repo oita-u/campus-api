@@ -19,9 +19,17 @@ columns:
     type: string
     comment: 氏名
 
-  - name: department
-    type: string
-    comment: 所属
+  - name: faculty_id
+    type: int64
+    comment: 所属学部ID
+
+  - name: department_id
+    type: int64
+    comment: 所属学科ID
+
+  - name: program_id
+    type: int64
+    comment: 所属コース・プログラムID
 
   - name: grade
     type: string

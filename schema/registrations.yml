@@ -1,0 +1,30 @@
+table: registrations
+comment: ユーザーの履修登録状況を管理するテーブル
+
+columns:
+  - name: id
+    type: int64
+    comment: ID
+
+  - name: user_id
+    type: int64
+    comment: 
+
+  - name: course_id
+    type: int64
+    comment: 授業ID
+
+  - name: status
+    type: string
+    default: "registered"
+    comment: 状態 (registered=登録済, cancelled=取消, completed=単位取得済)
+
+  - name: updated_at
+    type: time.Time
+    default: CURRENT_TIMESTAMP
+    comment: 更新日時
+
+  - name: created_at
+    type: time.Time
+    default: CURRENT_TIMESTAMP
+    comment: 作成日時

@@ -1,0 +1,24 @@
+table: departments
+comment: 学科情報を管理するテーブル
+
+columns:
+  - name: id
+    type: int64
+    comment: 学科ID
+
+  - name: faculty_id
+    type: int64
+    comment: 所属学部ID
+
+  - name: name
+    type: string
+    comment: 学科名
+
+  - name: code
+    type: string
+    comment: 学科コード
+
+  - name: created_at
+    type: time.Time
+    default: CURRENT_TIMESTAMP
+    comment: 作成日時
