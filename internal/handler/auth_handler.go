@@ -2,7 +2,8 @@ package handler
 
 import (
 	"net/http"
-	"regexp"
+
+	"net/mail"
 
 	"github.com/gin-gonic/gin"
 	"github.com/oita-u/campus-api/internal/auth"
@@ -46,8 +47,8 @@ func (h *AuthHandler) Login(c *gin.Context) {
 		return
 	}
 
-	emailRegex := regexp.MustCompile(`^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$`)
-	if !emailRegex.MatchString(req.Email) {
+	_, err := mail.ParseAddress(req.Email)
+	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message": "メールアドレスの形式が正しくありません",
 		})
