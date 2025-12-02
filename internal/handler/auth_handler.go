@@ -54,9 +54,9 @@ func (h *AuthHandler) Login(c *gin.Context) {
 		return
 	}
 
-	if len(req.Password) < 6 {
+	if len(req.Password) < 8 {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"message": "パスワードは6文字以上である必要があります",
+			"message": "パスワードは8文字以上である必要があります",
 		})
 		return
 	}
