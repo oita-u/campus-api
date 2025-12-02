@@ -3,7 +3,6 @@ package handler
 import (
 	"net/http"
 	"strconv"
-	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/oita-u/campus-api/internal/service"
@@ -32,9 +31,7 @@ func (h *TimetableHandler) GetTimetable(c *gin.Context) {
 	semester := c.Query("semester")
 
 	var year int
-	if yearStr == "" {
-		year = time.Now().Year()
-	} else {
+	if yearStr != "" {
 		parsedYear, err := strconv.Atoi(yearStr)
 		if err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{
@@ -45,7 +42,7 @@ func (h *TimetableHandler) GetTimetable(c *gin.Context) {
 		year = parsedYear
 	}
 
-	items, err := h.timetableService.GetTimetable(userID.(string), year, semester)
+	items, resolvedYear, resolvedSemester, err := h.timetableService.GetTimetable(userID.(string), year, semester)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"message": "時間割の取得に失敗しました。",
@@ -54,8 +51,8 @@ func (h *TimetableHandler) GetTimetable(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{
-		"year":     year,
-		"semester": semester,
+		"year":     resolvedYear,
+		"semester": resolvedSemester,
 		"items":    items,
 	})
 }

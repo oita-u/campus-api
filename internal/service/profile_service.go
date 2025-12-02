@@ -28,7 +28,6 @@ func (s *ProfileService) GetProfile(userID string) (*model.Profile, error) {
 			return &model.Profile{}, nil
 		}
 
-		logger.Get().Error("Failed to get profile", zap.Error(err))
 		return nil, errors.New("ユーザーが見つかりません")
 	}
 	return profile, nil

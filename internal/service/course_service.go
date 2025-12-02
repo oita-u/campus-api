@@ -1,8 +1,6 @@
 package service
 
 import (
-	"time"
-
 	"github.com/oita-u/campus-api/internal/model"
 	"github.com/oita-u/campus-api/internal/repository"
 )
@@ -16,13 +14,7 @@ func NewCourseService(r *repository.CourseRepository) *CourseService {
 }
 
 func (s *CourseService) SearchCourses(userID string, year int, semester, keyword string) ([]model.Course, int, string, error) {
-	if year == 0 {
-		year = time.Now().Year()
-	}
-
-	if semester == "" {
-		semester = "1st"
-	}
+	year, semester = resolveYearSemester(year, semester)
 
 	courses, err := s.repo.SearchCourses(userID, year, semester, keyword)
 	if err != nil {

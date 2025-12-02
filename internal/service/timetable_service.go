@@ -1,8 +1,6 @@
 package service
 
 import (
-	"time"
-
 	"github.com/oita-u/campus-api/internal/model"
 	"github.com/oita-u/campus-api/internal/repository"
 )
@@ -15,14 +13,13 @@ func NewTimetableService(r *repository.TimetableRepository) *TimetableService {
 	return &TimetableService{repo: r}
 }
 
-func (s *TimetableService) GetTimetable(userID string, year int, semester string) ([]model.TimetableItem, error) {
-	if year == 0 {
-		year = time.Now().Year()
+func (s *TimetableService) GetTimetable(userID string, year int, semester string) ([]model.TimetableItem, int, string, error) {
+	year, semester = resolveYearSemester(year, semester)
+
+	items, err := s.repo.GetTimetableByUserID(userID, year, semester)
+	if err != nil {
+		return nil, 0, "", err
 	}
 
-	if semester == "" {
-		semester = "1st"
-	}
-
-	return s.repo.GetTimetableByUserID(userID, year, semester)
+	return items, year, semester, nil
 }
