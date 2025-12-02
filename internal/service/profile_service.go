@@ -24,11 +24,3 @@ func (s *ProfileService) GetProfile(userID string) (*model.Profile, error) {
 	}
 	return profile, nil
 }
-
-func (s *ProfileService) GetProfileByStudentNumber(studentNumber string) (*model.Profile, error) {
-	profile, err := s.profileRepo.GetByStudentNumber(studentNumber)
-	if err != nil {
-		return nil, errors.New("学生情報が見つかりません")
-	}
-	return profile, nil
-}
