@@ -24,14 +24,6 @@ func New() *gin.Engine {
 	corsConfig.AllowCredentials = true
 	r.Use(cors.New(corsConfig))
 
-	studentRepo := &repository.StudentRepository{}
-	studentService := &service.StudentService{Repo: studentRepo}
-	studentHandler := &handler.StudentHandler{Service: studentService}
-
-	statusRepo := &repository.StudentStatusChangeRepository{}
-	statusService := &service.StudentStatusChangeService{Repo: statusRepo}
-	statusHandler := &handler.StudentStatusChangeHandler{Service: statusService}
-
 	userRepo := repository.NewUserRepository()
 	userService := service.NewUserService(userRepo)
 	authHandler := handler.NewAuthHandler(userService)
@@ -44,20 +36,9 @@ func New() *gin.Engine {
 	api := r.Group("/api")
 	v1 := api.Group("/v1")
 
-	v1.GET("/students/:id", studentHandler.GetByID)
-	v1.GET("/students", studentHandler.List)
-
-	v1.GET("/students/:id/status-changes", statusHandler.GetByStudentNumber)
-
 	authPublic := v1.Group("/auth")
 	authPublic.POST("/login", authHandler.Login)
 	authPublic.POST("/register", userHandler.Create)
-
-	auth := v1.Group("/auth")
-	auth.Use(middleware.JWT())
-	{
-		auth.GET("/me", handler.Me)
-	}
 
 	profile := v1.Group("/profile")
 	profile.Use(middleware.JWT())
