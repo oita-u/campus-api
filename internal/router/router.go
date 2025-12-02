@@ -37,7 +37,8 @@ func New() *gin.Engine {
 	authHandler := handler.NewAuthHandler(userService)
 	userHandler := handler.NewUserHandler(userService)
 
-	profileService := service.NewProfileService(userRepo, studentRepo)
+	profileRepo := repository.NewProfileRepository()
+	profileService := service.NewProfileService(profileRepo)
 	profileHandler := handler.NewProfileHandler(profileService)
 
 	api := r.Group("/api")

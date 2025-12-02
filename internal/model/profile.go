@@ -1,13 +1,12 @@
 package model
 
 type Profile struct {
-	Name          string `json:"name"`
-	StudentID     string `json:"studentId"`
-	Email         string `json:"email"`
-	Phone         string `json:"phone"`
-	Department    string `json:"department"`
-	Grade         string `json:"grade"`
-	EnrollmentYear string `json:"enrollmentYear"`
-	Birthday      string `json:"birthday"`
+	Name           string `db:"name" json:"name"`
+	StudentID      string `db:"student_id" json:"studentId"`
+	Email          string `db:"email" json:"email"`
+	Phone          string `db:"phone" json:"phone"`
+	Department     string `db:"department" json:"department"`
+	Grade          string `db:"grade" json:"grade"`
+	EnrollmentYear string `db:"enrollment_year" json:"enrollmentYear"`
+	Birthday       string `db:"birthday" json:"birthday"`
 }
-

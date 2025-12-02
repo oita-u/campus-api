@@ -8,54 +8,27 @@ import (
 )
 
 type ProfileService struct {
-	userRepo    *repository.UserRepository
-	studentRepo *repository.StudentRepository
+	profileRepo *repository.ProfileRepository
 }
 
-func NewProfileService(userRepo *repository.UserRepository, studentRepo *repository.StudentRepository) *ProfileService {
+func NewProfileService(profileRepo *repository.ProfileRepository) *ProfileService {
 	return &ProfileService{
-		userRepo:    userRepo,
-		studentRepo: studentRepo,
+		profileRepo: profileRepo,
 	}
 }
 
 func (s *ProfileService) GetProfile(userID string) (*model.Profile, error) {
-	user, err := s.userRepo.GetByID(userID)
+	profile, err := s.profileRepo.GetByUserID(userID)
 	if err != nil {
 		return nil, errors.New("ユーザーが見つかりません")
 	}
-
-	profile := &model.Profile{
-		Name:          user.Name,
-		StudentID:     "",
-		Email:         user.Email,
-		Phone:         "",
-		Department:    "",
-		Grade:         "",
-		EnrollmentYear: "",
-		Birthday:      "",
-	}
-
 	return profile, nil
 }
 
 func (s *ProfileService) GetProfileByStudentNumber(studentNumber string) (*model.Profile, error) {
-	student, err := s.studentRepo.GetByStudentNumber(studentNumber)
+	profile, err := s.profileRepo.GetByStudentNumber(studentNumber)
 	if err != nil {
 		return nil, errors.New("学生情報が見つかりません")
 	}
-
-	profile := &model.Profile{
-		Name:          student.Name,
-		StudentID:     student.StudentNumber,
-		Email:         "",
-		Phone:         "",
-		Department:    student.Department,
-		Grade:         student.Grade,
-		EnrollmentYear: "",
-		Birthday:      "",
-	}
-
 	return profile, nil
 }
-
