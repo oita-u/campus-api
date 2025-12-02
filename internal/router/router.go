@@ -33,6 +33,10 @@ func New() *gin.Engine {
 	profileService := service.NewProfileService(profileRepo)
 	profileHandler := handler.NewProfileHandler(profileService)
 
+	gradeRepo := repository.NewGradeRepository()
+	gradeService := service.NewGradeService(gradeRepo)
+	gradeHandler := handler.NewGradeHandler(gradeService)
+
 	timetableRepo := repository.NewTimetableRepository()
 	timetableService := service.NewTimetableService(timetableRepo)
 	timetableHandler := handler.NewTimetableHandler(timetableService)
@@ -52,6 +56,12 @@ func New() *gin.Engine {
 	profile.Use(middleware.JWT())
 	{
 		profile.GET("", profileHandler.GetProfile)
+	}
+
+	grades := v1.Group("/grades")
+	grades.Use(middleware.JWT())
+	{
+		grades.GET("", gradeHandler.GetGrades)
 	}
 
 	timetable := v1.Group("/timetable")
