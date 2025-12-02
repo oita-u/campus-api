@@ -21,7 +21,7 @@ func (r *UserRepository) Create(u *model.User) error {
 
 func (r *UserRepository) GetByID(id string) (*model.User, error) {
 	var u model.User
-	err := db.Conn.Get(&u, `SELECT * FROM users WHERE id = $1`, id)
+	err := db.Conn.Get(&u, `SELECT id, email, password, name FROM users WHERE id = $1`, id)
 	if err != nil {
 		return nil, err
 	}
@@ -30,7 +30,7 @@ func (r *UserRepository) GetByID(id string) (*model.User, error) {
 
 func (r *UserRepository) GetByEmail(email string) (*model.User, error) {
 	var u model.User
-	err := db.Conn.Get(&u, `SELECT * FROM users WHERE email = $1`, email)
+	err := db.Conn.Get(&u, `SELECT id, email, password, name FROM users WHERE email = $1`, email)
 	if err != nil {
 		return nil, err
 	}
