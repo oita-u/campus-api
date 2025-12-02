@@ -23,7 +23,7 @@ func NewProfileService(profileRepo *repository.ProfileRepository) *ProfileServic
 func (s *ProfileService) GetProfile(userID string) (*model.Profile, error) {
 	profile, err := s.profileRepo.GetByUserID(userID)
 	if err != nil {
-		// プロフィール未登録の場合は、空のプロフィールを返す
+		logger.Get().Error("Error retrieving profile", zap.String("userID", userID), zap.Error(err))
 		if errors.Is(err, sql.ErrNoRows) {
 			return &model.Profile{}, nil
 		}
