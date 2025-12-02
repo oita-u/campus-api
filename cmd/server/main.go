@@ -11,11 +11,11 @@ import (
 )
 
 func main() {
-	config.Load()
-	db.Init()
-
 	logger.Init()
 	defer logger.Get().Sync()
+
+	config.Load()
+	db.Init()
 
 	addr := ":" + config.C.Port
 
