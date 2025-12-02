@@ -13,7 +13,7 @@ func NewCourseRepository() *CourseRepository {
 	return &CourseRepository{}
 }
 
-func (r *CourseRepository) SearchCourses(year int, semester, keyword string) ([]model.Course, error) {
+func (r *CourseRepository) SearchCourses(userID string, year int, semester, keyword string) ([]model.Course, error) {
 	courses := []model.Course{}
 
 	query := `
@@ -58,10 +58,22 @@ func (r *CourseRepository) SearchCourses(year int, semester, keyword string) ([]
 			AND (
 				course_name ILIKE $%d OR
 				instructor_name ILIKE $%d OR
-				course_code ILIKE $%d
+				course_code ILIKE $%d OR
+				d.name ILIKE $%d
 			)
-		`, argPos, argPos, argPos)
+		`, argPos, argPos, argPos, argPos)
 		args = append(args, like)
+		argPos++
+	} else if userID != "" {
+		query += fmt.Sprintf(`
+			AND EXISTS (
+				SELECT 1 FROM registrations r
+				WHERE r.course_id = c.id
+				AND r.user_id = $%d
+				AND r.status = 'registered'
+			)
+		`, argPos)
+		args = append(args, userID)
 		argPos++
 	}
 

@@ -15,7 +15,7 @@ func NewCourseService(r *repository.CourseRepository) *CourseService {
 	return &CourseService{repo: r}
 }
 
-func (s *CourseService) SearchCourses(year int, semester, keyword string) ([]model.Course, int, string, error) {
+func (s *CourseService) SearchCourses(userID string, year int, semester, keyword string) ([]model.Course, int, string, error) {
 	if year == 0 {
 		year = time.Now().Year()
 	}
@@ -24,7 +24,7 @@ func (s *CourseService) SearchCourses(year int, semester, keyword string) ([]mod
 		semester = "1st"
 	}
 
-	courses, err := s.repo.SearchCourses(year, semester, keyword)
+	courses, err := s.repo.SearchCourses(userID, year, semester, keyword)
 	if err != nil {
 		return nil, 0, "", err
 	}

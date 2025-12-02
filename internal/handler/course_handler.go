@@ -19,6 +19,14 @@ func NewCourseHandler(courseService *service.CourseService) *CourseHandler {
 }
 
 func (h *CourseHandler) SearchCourses(c *gin.Context) {
+	userID, exists := c.Get("user_id")
+	if !exists {
+		c.JSON(http.StatusUnauthorized, gin.H{
+			"message": "認証に失敗しました。再度ログインしてください。",
+		})
+		return
+	}
+
 	yearStr := c.Query("year")
 	semester := c.Query("semester")
 	keyword := c.Query("q")
@@ -35,7 +43,7 @@ func (h *CourseHandler) SearchCourses(c *gin.Context) {
 		year = parsedYear
 	}
 
-	courses, resolvedYear, resolvedSemester, err := h.courseService.SearchCourses(year, semester, keyword)
+	courses, resolvedYear, resolvedSemester, err := h.courseService.SearchCourses(userID.(string), year, semester, keyword)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"message": "シラバス一覧の取得に失敗しました。",
