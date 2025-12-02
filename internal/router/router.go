@@ -6,35 +6,62 @@ import (
 	"github.com/oita-u/campus-api/internal/repository"
 	"github.com/oita-u/campus-api/internal/service"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
 func New() *gin.Engine {
 	r := gin.New()
 
-	r.Use(gin.Recovery())
+	r.Use(middleware.GinLogger())
+	r.Use(middleware.Recovery())
+
+	corsConfig := cors.DefaultConfig()
+	corsConfig.AllowAllOrigins = true
+
+	corsConfig.AllowMethods = []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"}
+	corsConfig.AllowHeaders = []string{"Content-Type", "Authorization"}
+	corsConfig.AllowCredentials = true
+	r.Use(cors.New(corsConfig))
 
 	studentRepo := &repository.StudentRepository{}
 	studentService := &service.StudentService{Repo: studentRepo}
 	studentHandler := &handler.StudentHandler{Service: studentService}
 
-	// --- New Status Change Setups ---
 	statusRepo := &repository.StudentStatusChangeRepository{}
 	statusService := &service.StudentStatusChangeService{Repo: statusRepo}
 	statusHandler := &handler.StudentStatusChangeHandler{Service: statusService}
 
-	v1 := r.Group("/v1")
+	userRepo := repository.NewUserRepository()
+	userService := service.NewUserService(userRepo)
+	authHandler := handler.NewAuthHandler(userService)
+	userHandler := handler.NewUserHandler(userService)
+
+	profileService := service.NewProfileService(userRepo, studentRepo)
+	profileHandler := handler.NewProfileHandler(profileService)
+
+	api := r.Group("/api")
+	v1 := api.Group("/v1")
+
 	v1.GET("/students/:id", studentHandler.GetByID)
 	v1.GET("/students", studentHandler.List)
 
-	// ステータス変更履歴用
 	v1.GET("/students/:id/status-changes", statusHandler.GetByStudentNumber)
 
-	// JWT保護ルート
+	authPublic := v1.Group("/auth")
+	authPublic.POST("/login", authHandler.Login)
+	authPublic.POST("/register", userHandler.Create)
+
 	auth := v1.Group("/auth")
 	auth.Use(middleware.JWT())
 	{
 		auth.GET("/me", handler.Me)
+	}
+
+	profile := v1.Group("/profile")
+	profile.Use(middleware.JWT())
+	{
+		profile.GET("", profileHandler.GetProfile)
 	}
 
 	return r

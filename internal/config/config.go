@@ -8,11 +8,12 @@ import (
 )
 
 type Config struct {
-	Port      string
-	AppEnv    string
-	DBUrl     string
-	JwtSecret string
-	JwtExpire int
+	Port       string
+	AppEnv     string
+	DBUrl      string
+	JwtSecret  string
+	JwtExpire  int
+	CorsOrigin string
 }
 
 var C Config
@@ -21,11 +22,12 @@ func Load() {
 	_ = godotenv.Load() // .env が無くてもエラーにしない
 
 	C = Config{
-		Port:      getEnv("PORT", "8080"),
-		AppEnv:    getEnv("APP_ENV", "development"),
-		DBUrl:     getEnv("DB_URL", ""),
-		JwtSecret: getEnv("JWT_SECRET", ""),
-		JwtExpire: getEnvInt("JWT_EXPIRE", 3600),
+		Port:       getEnv("PORT", "8080"),
+		AppEnv:     getEnv("APP_ENV", "development"),
+		DBUrl:      getEnv("DB_URL", ""),
+		JwtSecret:  getEnv("JWT_SECRET", ""),
+		JwtExpire:  getEnvInt("JWT_EXPIRE", 3600),
+		CorsOrigin: getEnv("CORS_ORIGIN", "http://localhost:5173"),
 	}
 }
 

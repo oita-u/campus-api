@@ -16,7 +16,7 @@ func (h *StudentStatusChangeHandler) GetByStudentNumber(c *gin.Context) {
 
 	changes, err := h.Service.GetHistory(studentNumber)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		c.JSON(http.StatusInternalServerError, gin.H{"message": "ステータス変更履歴の取得に失敗しました"})
 		return
 	}
 
