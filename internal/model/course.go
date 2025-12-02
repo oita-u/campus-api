@@ -13,7 +13,8 @@ type Course struct {
 	Semester       string    `db:"semester" json:"semester"`
 	CourseCode     string    `db:"course_code" json:"courseCode"`
 	Credits        int       `db:"credits" json:"credits"`
-	DepartmentID   *int64    `db:"department_id" json:"departmentId,omitempty"`
+	DepartmentID   *int64    `db:"department_id" json:"-"`
+	DepartmentName string    `db:"department_name" json:"departmentName"`
 	CreatedAt      time.Time `db:"created_at" json:"createdAt"`
 	UpdatedAt      time.Time `db:"updated_at" json:"updatedAt"`
 }

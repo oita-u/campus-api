@@ -18,21 +18,23 @@ func (r *CourseRepository) SearchCourses(year int, semester, keyword string) ([]
 
 	query := `
 		SELECT
-			id,
-			course_name,
-			instructor_name,
-			course_type,
-			day_of_week,
-			period,
-			academic_year,
-			semester,
-			course_code,
-			credits,
-			department_id,
-			created_at,
-			updated_at
-		FROM courses
-		WHERE 1=1
+			c.id,
+			c.course_name,
+			c.instructor_name,
+			c.course_type,
+			c.day_of_week,
+			c.period,
+			c.academic_year,
+			c.semester,
+			c.course_code,
+			c.credits,
+			c.department_id,
+			d.name AS department_name,
+			c.created_at,
+			c.updated_at
+ 		FROM courses c
+		LEFT JOIN departments d ON c.department_id = d.id
+ 		WHERE 1=1
 	`
 
 	args := []interface{}{}
