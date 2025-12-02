@@ -6,6 +6,10 @@ columns:
     type: int64
     comment: 授業ID
 
+  - name: course_code
+    type: string
+    comment: 科目コード
+
   - name: course_name
     type: string
     comment: 科目名
@@ -33,6 +37,14 @@ columns:
   - name: semester
     type: string
     comment: 学期
+
+  - name: credits
+    type: int
+    comment: 単位数
+
+  - name: department_id
+    type: int64
+    comment: 学科ID
 
   - name: updated_at
     type: time.Time

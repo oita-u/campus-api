@@ -33,6 +33,14 @@ func New() *gin.Engine {
 	profileService := service.NewProfileService(profileRepo)
 	profileHandler := handler.NewProfileHandler(profileService)
 
+	timetableRepo := repository.NewTimetableRepository()
+	timetableService := service.NewTimetableService(timetableRepo)
+	timetableHandler := handler.NewTimetableHandler(timetableService)
+
+	courseRepo := repository.NewCourseRepository()
+	courseService := service.NewCourseService(courseRepo)
+	courseHandler := handler.NewCourseHandler(courseService)
+
 	api := r.Group("/api")
 	v1 := api.Group("/v1")
 
@@ -44,6 +52,18 @@ func New() *gin.Engine {
 	profile.Use(middleware.JWT())
 	{
 		profile.GET("", profileHandler.GetProfile)
+	}
+
+	timetable := v1.Group("/timetable")
+	timetable.Use(middleware.JWT())
+	{
+		timetable.GET("", timetableHandler.GetTimetable)
+	}
+
+	courses := v1.Group("/courses")
+	courses.Use(middleware.JWT())
+	{
+		courses.GET("", courseHandler.SearchCourses)
 	}
 
 	return r
