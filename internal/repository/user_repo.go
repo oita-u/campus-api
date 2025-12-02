@@ -1,42 +1,38 @@
 package repository
 
 import (
-	"errors"
-
+	"github.com/oita-u/campus-api/internal/db"
 	"github.com/oita-u/campus-api/internal/model"
 )
 
-type UserRepository struct {
-	data map[string]*model.User
-}
+type UserRepository struct{}
 
 func NewUserRepository() *UserRepository {
-	return &UserRepository{
-		data: make(map[string]*model.User),
-	}
+	return &UserRepository{}
 }
 
 func (r *UserRepository) Create(u *model.User) error {
-	if _, ok := r.data[u.ID]; ok {
-		return errors.New("user already exists")
+	_, err := db.Conn.Exec(`INSERT INTO users (id, email, password, name) VALUES ($1, $2, $3, $4)`, u.ID, u.Email, u.Password, u.Name)
+	if err != nil {
+		return err
 	}
-	r.data[u.ID] = u
 	return nil
 }
 
 func (r *UserRepository) GetByID(id string) (*model.User, error) {
-	u, ok := r.data[id]
-	if !ok {
-		return nil, errors.New("not found")
+	var u model.User
+	err := db.Conn.Get(&u, `SELECT id, email, password, name FROM users WHERE id = $1`, id)
+	if err != nil {
+		return nil, err
 	}
-	return u, nil
+	return &u, nil
 }
 
 func (r *UserRepository) GetByEmail(email string) (*model.User, error) {
-	for _, u := range r.data {
-		if u.Email == email {
-			return u, nil
-		}
+	var u model.User
+	err := db.Conn.Get(&u, `SELECT id, email, password, name FROM users WHERE email = $1`, email)
+	if err != nil {
+		return nil, err
 	}
-	return nil, errors.New("not found")
+	return &u, nil
 }

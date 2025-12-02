@@ -43,3 +43,17 @@ func (s *UserService) Create(email, password, name string) (*model.User, error) 
 func (s *UserService) Get(id string) (*model.User, error) {
 	return s.repo.GetByID(id)
 }
+
+func (s *UserService) Login(email, password string) (*model.User, error) {
+	user, err := s.repo.GetByEmail(email)
+	if err != nil {
+		return nil, errors.New("メールアドレスまたはパスワードが正しくありません")
+	}
+
+	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
+	if err != nil {
+		return nil, errors.New("メールアドレスまたはパスワードが正しくありません")
+	}
+
+	return user, nil
+}

@@ -1,9 +1,8 @@
 package main
 
 import (
-	"log"
-
 	"github.com/gin-gonic/gin"
+	"go.uber.org/zap"
 
 	"github.com/oita-u/campus-api/internal/config"
 	"github.com/oita-u/campus-api/internal/db"
@@ -12,11 +11,13 @@ import (
 )
 
 func main() {
+	logger.Init()
+	defer logger.Get().Sync()
+
 	config.Load()
 	db.Init()
 
-	logger.Init()
-	defer logger.Get().Sync()
+	addr := ":" + config.C.Port
 
 	if config.C.AppEnv == "production" {
 		gin.SetMode(gin.ReleaseMode)
@@ -26,8 +27,8 @@ func main() {
 
 	r := router.New()
 
-	addr := ":" + config.C.Port
+	logger.Get().Info("サーバーを起動しています", zap.String("address", addr))
 	if err := r.Run(addr); err != nil {
-		log.Fatalf("server error: %v", err)
+		logger.Get().Fatal("サーバーの起動に失敗しました", zap.Error(err))
 	}
 }

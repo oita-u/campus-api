@@ -6,35 +6,44 @@ import (
 	"github.com/oita-u/campus-api/internal/repository"
 	"github.com/oita-u/campus-api/internal/service"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
 func New() *gin.Engine {
 	r := gin.New()
 
-	r.Use(gin.Recovery())
+	r.Use(middleware.GinLogger())
+	r.Use(middleware.Recovery())
 
-	studentRepo := &repository.StudentRepository{}
-	studentService := &service.StudentService{Repo: studentRepo}
-	studentHandler := &handler.StudentHandler{Service: studentService}
+	corsConfig := cors.DefaultConfig()
+	corsConfig.AllowAllOrigins = true
 
-	// --- New Status Change Setups ---
-	statusRepo := &repository.StudentStatusChangeRepository{}
-	statusService := &service.StudentStatusChangeService{Repo: statusRepo}
-	statusHandler := &handler.StudentStatusChangeHandler{Service: statusService}
+	corsConfig.AllowMethods = []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"}
+	corsConfig.AllowHeaders = []string{"Content-Type", "Authorization"}
+	corsConfig.AllowCredentials = true
+	r.Use(cors.New(corsConfig))
 
-	v1 := r.Group("/v1")
-	v1.GET("/students/:id", studentHandler.GetByID)
-	v1.GET("/students", studentHandler.List)
+	userRepo := repository.NewUserRepository()
+	userService := service.NewUserService(userRepo)
+	authHandler := handler.NewAuthHandler(userService)
+	userHandler := handler.NewUserHandler(userService)
 
-	// ステータス変更履歴用
-	v1.GET("/students/:id/status-changes", statusHandler.GetByStudentNumber)
+	profileRepo := repository.NewProfileRepository()
+	profileService := service.NewProfileService(profileRepo)
+	profileHandler := handler.NewProfileHandler(profileService)
 
-	// JWT保護ルート
-	auth := v1.Group("/auth")
-	auth.Use(middleware.JWT())
+	api := r.Group("/api")
+	v1 := api.Group("/v1")
+
+	authPublic := v1.Group("/auth")
+	authPublic.POST("/login", authHandler.Login)
+	authPublic.POST("/register", userHandler.Create)
+
+	profile := v1.Group("/profile")
+	profile.Use(middleware.JWT())
 	{
-		auth.GET("/me", handler.Me)
+		profile.GET("", profileHandler.GetProfile)
 	}
 
 	return r
